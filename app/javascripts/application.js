@@ -1,8 +1,13 @@
+//= require ./underscore-min
+//= require ./backbone-min
+//= require ./backbone.mutators.min
+//= require ./mustache
+//= require ./rivets.min
+
 (function(global) {
   // localStorage.setItem(...)
   // localStorage.getItem(...)
   //
-
 
   function template(name) {
     var text = $('#' + name + '-template').text();
