@@ -18,22 +18,19 @@
   function GithubAPI(user) {
     this.baseURL = 'https://api.github.com/';
     this.user = user;
-
-    $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
-      options.format = 'json';
-      options.username = App.user.get('username');
-      options.password = App.user.get('password');
-    });
   };
 
   GithubAPI.prototype = {
     get: function(path, callback, propogateErrors) {
-      var url = this.baseURL + path;
-      $.ajax(url, {
-        error: function(xhr, textStatus, error) {
+      $.ajax({
+        url: 'https://api.github.com/notifications',
+        dataType: 'json',
+        xhrFields: {withCredentials: true},
+        headers: {'Authorization': 'Basic what:what'},
+        success: callback,
+        error: function (a, s, error) {
           if (propogateErrors) {callback({error: error});}
-        },
-        success: callback
+        }
       });
     },
 
@@ -140,7 +137,9 @@
         }
       },
 
-      out: function() {if (this.login) {this.login.$el.hide();}}
+      out: function() {
+        if (this.login) {this.login.$el.hide();}
+      }
     },
 
     initialize: function() {
@@ -184,7 +183,7 @@
     App.api = new GithubAPI();
     App.user = new User();
     App.router = new Router();
-    Backbone.history.start();
+    Backbone.history.start({pushState: true});
   });
 
 })(window);
