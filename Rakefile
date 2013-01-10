@@ -26,9 +26,18 @@ end
 
 def env
   @env ||= Sprockets::Environment.new.tap do |env|
-    # Tilt::CoffeeScriptTemplate.default_bare = true
     %w(stylesheets javascripts images).each do |p|
       env.append_path File.expand_path("../app/#{p}", __FILE__)
+    end
+
+    env.register_preprocessor "application/javascript", :add_urls do |context, data|
+      if context.logical_path.match(%r{application})
+        data.gsub(%r{([\w_]+_URL)}) do |match|
+          ENV[match]
+        end
+      else
+        data
+      end
     end
   end
 end
